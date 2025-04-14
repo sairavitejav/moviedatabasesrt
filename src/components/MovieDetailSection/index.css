@@ -1,0 +1,27 @@
+.movie-container {
+  display: flex;
+  flex-direction: column;
+}
+.movie-title-name {
+  text-align: center;
+  color: #000000;
+  font-size: 30px;
+}
+.img {
+  width: 100%;
+  border-radius: 20px;
+}
+.detail-cont {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.side-head {
+  color: #000000;
+  font-size: 20px;
+  font-weight: bold;
+}
+.movie-details {
+  color: #000000;
+  font-size: 20px;
+}

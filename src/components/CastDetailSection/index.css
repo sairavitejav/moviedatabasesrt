@@ -1,0 +1,20 @@
+.cast-container {
+  display: flex;
+  flex-direction: column;
+}
+.cast-name {
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+.char-name {
+  font-size: 15px;
+  margin-top: 0px;
+  margin-bottom: 2px;
+}
+.department {
+  font-size: 15px;
+  margin-top: 0px;
+}
+.cast-img {
+  border-radius: 10px;
+}
