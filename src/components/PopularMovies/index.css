@@ -10,3 +10,34 @@
   align-items: center;
   min-height: 100vh;
 }
+.top-cont {
+  padding-top: 90px;
+  padding-bottom: 70px;
+}
+.popular-pagination-container {
+  background-color: #cfd1d4;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.popular-pagination-btns {
+  background-color: black;
+  color: #ffffff;
+  padding: 10px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 100px;
+}
+.popular-page-no {
+  margin-left: 10px;
+  margin-right: 10px;
+  color: #000000;
+  font-size: 20px;
+}

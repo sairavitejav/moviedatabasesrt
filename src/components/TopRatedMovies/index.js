@@ -14,34 +14,46 @@ const apiStatusConstants = {
 const TopRatedMovies = () => {
   const [topMoviesList, setTopMovies] = useState([])
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
-  const getTopMovies = async () => {
-    setApiStatus(apiStatusConstants.loading)
-    const apiKey = '698165796f71ff01e4ad978a5b6c1179'
-    const apiUrl = `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`
-    const options = {
-      method: 'GET',
+  const [page, setPage] = useState(1)
+
+  useEffect(() => {
+    const getTopMovies = async () => {
+      setApiStatus(apiStatusConstants.loading)
+      const apiKey = '698165796f71ff01e4ad978a5b6c1179'
+      const apiUrl = `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=${page}`
+      const options = {
+        method: 'GET',
+      }
+      const response = await fetch(apiUrl, options)
+      if (response.ok === true) {
+        const data = await response.json()
+        const updatedData = data.results.map(movie => ({
+          id: movie.id,
+          overview: movie.overview,
+          popularity: movie.popularity,
+          posterPath: movie.poster_path,
+          title: movie.title,
+          voteAverage: movie.vote_average,
+        }))
+        // console.log(updatedData)
+        setTopMovies(updatedData)
+        setApiStatus(apiStatusConstants.success)
+      } else {
+        setApiStatus(apiStatusConstants.failure)
+      }
     }
-    const response = await fetch(apiUrl, options)
-    if (response.ok === true) {
-      const data = await response.json()
-      const updatedData = data.results.map(movie => ({
-        id: movie.id,
-        overview: movie.overview,
-        popularity: movie.popularity,
-        posterPath: movie.poster_path,
-        title: movie.title,
-        voteAverage: movie.vote_average,
-      }))
-      // console.log(updatedData)
-      setTopMovies(updatedData)
-      setApiStatus(apiStatusConstants.success)
-    } else {
-      setApiStatus(apiStatusConstants.failure)
+    getTopMovies()
+  }, [page])
+
+  const movePagePrevious = () => {
+    if (page > 1) {
+      setPage(prevPage => prevPage - 1)
     }
   }
-  useEffect(() => {
-    getTopMovies()
-  }, [])
+
+  const movePageNext = () => {
+    setPage(prevPage => prevPage + 1)
+  }
 
   const renderSuccessView = () => (
     <ul className="top-movie-container">
@@ -79,7 +91,26 @@ const TopRatedMovies = () => {
   return (
     <div>
       <Header />
-      {renderDifferentViews()}
+      <div className="top-cont">
+        {renderDifferentViews()}
+        <div className="top-pagination-container">
+          <button
+            className="top-pagination-btns"
+            onClick={movePagePrevious}
+            type="button"
+          >
+            Previous
+          </button>
+          <p className="top-page-no">{page}</p>
+          <button
+            className="top-pagination-btns"
+            onClick={movePageNext}
+            type="button"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

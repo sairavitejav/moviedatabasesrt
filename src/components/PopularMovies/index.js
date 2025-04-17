@@ -14,35 +14,48 @@ const apiStatusConstants = {
 const PopularMovies = () => {
   const [moviesList, setMoviesList] = useState([])
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
-  const getMoviesList = async () => {
-    setApiStatus(apiStatusConstants.loading)
-    const apiKey = '698165796f71ff01e4ad978a5b6c1179'
-    const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`
-    const options = {
-      method: 'GET',
+  const [page, setPage] = useState(1)
+
+  useEffect(() => {
+    const getMoviesList = async () => {
+      setApiStatus(apiStatusConstants.loading)
+      const apiKey = '698165796f71ff01e4ad978a5b6c1179'
+      const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${page}`
+      console.log(apiUrl)
+      const options = {
+        method: 'GET',
+      }
+      const response = await fetch(apiUrl, options)
+      if (response.ok === true) {
+        const data = await response.json()
+        // console.log(data)
+        const updatedData = data.results.map(movie => ({
+          id: movie.id,
+          overview: movie.overview,
+          popularity: movie.popularity,
+          posterPath: movie.poster_path,
+          title: movie.title,
+          voteAverage: movie.vote_average,
+        }))
+        console.log(updatedData)
+        setMoviesList(updatedData)
+        setApiStatus(apiStatusConstants.success)
+      } else {
+        setApiStatus(apiStatusConstants.failure)
+      }
     }
-    const response = await fetch(apiUrl, options)
-    if (response.ok === true) {
-      const data = await response.json()
-      // console.log(data)
-      const updatedData = data.results.map(movie => ({
-        id: movie.id,
-        overview: movie.overview,
-        popularity: movie.popularity,
-        posterPath: movie.poster_path,
-        title: movie.title,
-        voteAverage: movie.vote_average,
-      }))
-      // console.log(updatedData)
-      setMoviesList(updatedData)
-      setApiStatus(apiStatusConstants.success)
-    } else {
-      setApiStatus(apiStatusConstants.failure)
+    getMoviesList()
+  }, [page])
+
+  const movePagePrevious = () => {
+    if (page > 1) {
+      setPage(prevPage => prevPage - 1)
     }
   }
-  useEffect(() => {
-    getMoviesList()
-  }, [])
+
+  const movePageNext = () => {
+    setPage(prevPage => prevPage + 1)
+  }
 
   const renderSuccessView = () => (
     <ul className="popular-movies-container">
@@ -79,7 +92,26 @@ const PopularMovies = () => {
   return (
     <div>
       <Header />
-      {renderDifferentViews()}
+      <div className="top-cont">
+        {renderDifferentViews()}
+        <div className="popular-pagination-container">
+          <button
+            className="popular-pagination-btns"
+            onClick={movePagePrevious}
+            type="button"
+          >
+            Previous
+          </button>
+          <p className="popular-page-no">{page}</p>
+          <button
+            className="popular-pagination-btns"
+            onClick={movePageNext}
+            type="button"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
